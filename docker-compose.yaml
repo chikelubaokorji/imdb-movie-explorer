@@ -32,18 +32,12 @@ services:
       - ./db-init/initialize-imdb.sh:/initialize-imdb.sh
     command: bash -c "sleep 10 && chmod u+x /initialize-imdb.sh && /initialize-imdb.sh"
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
-  #     PGADMIN_DEFAULT_PASSWORD: admin
-  #     CSRF_COOKIE_SECURE: "False"
-  #     WTF_CSRF_ENABLED: "False"
-  #   ports:
-  #     - "5050:80"
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - default
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - default
+
 
 
