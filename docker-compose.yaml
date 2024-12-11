@@ -9,18 +9,41 @@ services:
       POSTGRES_DB: imdb_movies
     ports:
       - "5432:5432"
+    networks:
+      - default
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
       timeout: 5s
       retries: 5
-
+    logging:
+      driver: none
+      
   postgres-init:
     image: postgres:17
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       PGPASSWORD: postgres
+      MINIMAL_DATASET: false
     volumes:
-      - ./db-init/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      - ./db-init/initialize-imdb.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./db-init/schema.sql:/schema.sql
+      - ./db-init/initialize-imdb.sh:/initialize-imdb.sh
+    command: bash -c "sleep 10 && chmod u+x /initialize-imdb.sh && /initialize-imdb.sh"
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #     CSRF_COOKIE_SECURE: "False"
+  #     WTF_CSRF_ENABLED: "False"
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - default
+
+
