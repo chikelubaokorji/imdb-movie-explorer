@@ -8,7 +8,8 @@
 		"vscode": {
 			"extensions": [
 				"scala-lang.scala",
-				"scalameta.metals"
+				"scalameta.metals",
+				"GitHub.copilot"
 			]
 		}
 	},
