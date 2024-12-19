@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ..:/workspace:cached
+
   postgres:
     image: postgres:17
     environment:
@@ -28,8 +36,8 @@ services:
       PGPASSWORD: postgres
       MINIMAL_DATASET: false
     volumes:
-      - ./db-init/schema.sql:/schema.sql
-      - ./db-init/initialize-imdb.sh:/initialize-imdb.sh
+      - ../db-init/schema.sql:/schema.sql
+      - ../db-init/initialize-imdb.sh:/initialize-imdb.sh
     command: bash -c "sleep 10 && chmod u+x /initialize-imdb.sh && /initialize-imdb.sh"
 
   adminer:
